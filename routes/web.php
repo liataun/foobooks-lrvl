@@ -37,3 +37,8 @@ Route::view('/', 'welcome');
 //Route::get('/example', function () {
 //    return view('abc');
 //});
+
+/**
+ * Practice
+ */
+Route::any('/practice/{n?}', 'PracticeController@index');

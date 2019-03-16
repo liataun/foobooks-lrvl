@@ -2,6 +2,9 @@
 
 return [
 
+    //example from lecture
+    'supportEmail' => 'brt125.fake@g.harvard.edu',
+
     /*
     |--------------------------------------------------------------------------
     | Mail Driver
