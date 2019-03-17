@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    'Here are all the books...'
+    'Here are all your books...'
 @endsection
