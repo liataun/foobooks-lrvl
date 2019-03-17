@@ -32,7 +32,7 @@ Route::get('/books/{title}', 'BookController@show');
 //});
 
 # Existing route
-Route::view('/', 'welcome');
+//Route::view('/', 'welcome');
 
 //Route::get('/example', function () {
 //    return view('abc');
