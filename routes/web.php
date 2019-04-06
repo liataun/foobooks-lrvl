@@ -10,13 +10,16 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-# New routes
-//Route::get('/example', function () {
-//    return 'hello there!';
-//});
+Route::view('/', 'welcome');
+Route::view('/about', 'about');
+Route::view('/contact', 'contact');
+
+Route::get('/books/create', 'BookController@create');
+Route::post('/books', 'BookController@store');
 
 Route::get('/books', 'BookController@index');
-
+Route::get('/books/search', 'BookController@search');
+Route::get('/books/search-process', 'BookController@searchProcess');
 Route::get('/books/{title}', 'BookController@show');
 
 //Route::get('/books/{title?}', function($title = '') {
