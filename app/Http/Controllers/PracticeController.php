@@ -4,9 +4,117 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use IanLChapman\PigLatinTranslator\Parser;
+use App\Book;
 
 class PracticeController extends Controller
 {
+    public function practice11()
+    {
+        //Remove any/all books with an author name that includes the string “Rowling”.
+        $result = Book::where('author', 'LIKE', '%Rowling%')->delete();
+        if ($result == 0) {
+            dump('No rows deleted.');
+        } else {
+            dump($result.' rows deleted.');
+        }
+    }
+
+    public function practice10()
+    {
+        //Find any books by the author “J.K. Rowling” and update the author name to be “JK Rowling”
+        $result = Book::where('author', '=', 'J.K. Rowling')->update(['author' => 'JK Rowling']);
+        if ($result == 0) {
+            dump('No rows updated.');
+        } else {
+            dump($result.' rows updated.');
+        }
+    }
+
+    public function practice9()
+    {
+        //Retrieve all the books in descending order according to published date.
+        $books = Book::orderBy('published_year', 'DESC')->get();
+        if ($books->isEmpty()) {
+            dump('No matches found');
+        } else {
+            foreach ($books as $book) {
+                dump($book->toArray());
+            }
+        }
+    }
+
+    public function practice8()
+    {
+        //Retrieve all the books in alphabetical order by title.
+        $books = Book::orderBy('title')->get();
+        if ($books->isEmpty()) {
+            dump('No matches found');
+        } else {
+            foreach ($books as $book) {
+                dump($book->toArray());
+            }
+        }
+    }
+
+    public function practice7()
+    {
+        //Retrieve all the books published after 1950.
+        $books = Book::where('published_year', '>', '1950')->get();
+        if ($books->isEmpty()) {
+            dump('No matches found');
+        } else {
+            foreach ($books as $book) {
+                dump($book->toArray());
+            }
+        }
+    }
+
+    public function practice6()
+    {
+        //Retrieve the last 2 books that were added to the books table.
+        $books = Book::orderBy('created_at', 'DESC')->limit(2)->get();
+        if ($books->isEmpty()) {
+            dump('No matches found');
+        } else {
+            foreach ($books as $book) {
+                dump($book->toArray());
+            }
+        }
+    }
+
+    public function practice5()
+    {
+        $book = new Book();
+        $books = $book->where('title', 'LIKE', '%Harry Potter%')->get();
+
+        if ($books->isEmpty()) {
+            dump('No matches found');
+        } else {
+            foreach ($books as $book) {
+                dump($book->title);
+            }
+        }
+    }
+
+    public function practice4()
+    {
+        # Instantiate a new Book Model object
+        $book = new Book();
+
+        # Set the properties
+        # Note how each property corresponds to a field in the table
+        $book->title = 'Harry Potter and the Sorcerer\'s Stone';
+        $book->author = 'J.K. Rowling';
+        $book->published_year = 1997;
+        $book->cover_url = 'http://prodimage.images-bn.com/pimages/9780590353427_p0_v1_s484x700.jpg';
+        $book->purchase_url = 'http://www.barnesandnoble.com/w/harry-potter-and-the-sorcerers-stone-j-k-rowling/1100036321?ean=9780590353427';
+
+        # Invoke the Eloquent `save` method to generate a new row in the
+        # `books` table, with the above data
+        $book->save();
+
+        dump('Added: ' . $book->title);
+    }
 
     /**
      *
