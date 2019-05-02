@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App;
+use App\Book;
 
 class BookController extends Controller
 {
@@ -12,15 +13,30 @@ class BookController extends Controller
      */
     public function index()
     {
-        return view('books.index');
+        # Get all the books from our library
+        $books = Book::orderBy('title')->get();
+        # Query on the existing collection to get our recently added books
+        $newBooks = $books->sortByDesc('created_at')->take(3);
+
+        return view('books.index')->with([
+            'books' => $books,
+            'newBooks' => $newBooks,
+        ]);
     }
 
     /**
      * GET /books/{title}
      */
-    public function show($title)
+    public function show($id)
     {
-        return view('books.show')->with(['title' => $title]);
+        $book = Book::find($id);
+        if (!$book) {
+            return redirect('/books')->with(['alert' => 'Book not found']);
+        }
+
+        return view('books.show')->with([
+            'book' => $book
+        ]);
     }
 
     /**
@@ -30,6 +46,64 @@ class BookController extends Controller
     public function create(Request $request)
     {
         return view('books.create');
+    }
+
+    /**
+     * GET /books/create
+     * Display the form to add a new book
+     */
+    public function delete($id)
+    {
+        $book = Book::find($id)->delete();
+
+        return redirect('books')->with([
+            'alert' => 'Book deleted.'
+        ]);
+    }
+
+    /**
+     * GET /books/edit
+     * Display the form to add a new book
+     */
+    public function edit($id)
+    {
+        $book = Book::find($id);
+
+        if (!$book) {
+            return redirect('/books')->with([
+                'alert' => 'Book not found.'
+            ]);
+        }
+
+        return view('books.edit')->with([
+            'book' => $book
+        ]);
+    }
+
+    /*
+    * PUT /books/{id}
+    */
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'title' => 'required',
+            'author' => 'required',
+            'published_year' => 'required|digits:4|numeric',
+            'cover_url' => 'required|url',
+            'purchase_url' => 'required|url',
+        ]);
+
+        $book = Book::find($id);
+        $book->title = $request->input('title');
+        $book->author = $request->input('author');
+        $book->published_year = $request->input('published_year');
+        $book->cover_url = $request->input('cover_url');
+        $book->purchase_url = $request->input('purchase_url');
+        $book->save();
+
+        return redirect('/books/' . $id . '/edit')->with([
+            'alert' => 'Your changes were saved.'
+        ]);
     }
 
     /**
@@ -50,9 +124,17 @@ class BookController extends Controller
         # Note: If validation fails, it will redirect the visitor back to the form page
         # and none of the code that follows will execute.
 
-        # Code will eventually go here to add the book to the database,
-        # but for now we'll just dump the form data to the page for proof of concept
-        return redirect('/books/create')->withInput();
+        $book = new Book();
+        $book->title = $request->input('title');
+        $book->author = $request->input('author');
+        $book->published_year = $request->input('published_year');
+        $book->cover_url = $request->input('cover_url');
+        $book->purchase_url = $request->input('purchase_url');
+        $book->save();
+
+        return redirect('/books/create')->with([
+            'alert' => 'Your book was added.'
+        ]);
     }
 
     /**
@@ -124,7 +206,7 @@ class BookController extends Controller
 
             # Decode the book JSON data into an array
             # Nothing fancy here; just a built in PHP method
-            $books = json_decode($booksRawData, true);
+            $books = $book = Book::all()->toArray();
 
             # Loop through all the book data, looking for matches
             # This code was taken from v0 of foobooks we built earlier in the semester

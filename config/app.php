@@ -3,9 +3,11 @@
 return [
 
     'githubUrl' => 'https://github.com/susanBuck/foobooks',
+
     'nav' => [
         // URL => Link label
         'books' => 'Books',
+        'books/search' => 'Search',
         'books/create' => 'Add a book',
         'practice' => 'Practice',
         'about' => 'About',

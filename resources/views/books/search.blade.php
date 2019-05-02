@@ -24,14 +24,14 @@
     @if($searchTerm)
         <h2>Results for query: <em>{{ $searchTerm }}</em></h2>
 
-        @if(count($searchResults) == 0)
+        @if(!$searchResults)
             No matches found.
         @else
-            @foreach($searchResults as $title => $book)
+            @foreach($searchResults as $book)
                 <div class='book'>
-                    <h3>{{ $title }}</h3>
-                    <h4>by {{ $book['author'] }}</h4>
-                    <img src='{{ $book['cover_url'] }}' alt='Cover image for the book {{ $title }}'>
+                    <h3>{{ $book->title }}</h3>
+                    <h4>by {{ $book->author }}</h4>
+                    <img src='{{ $book->cover_url }}' alt='Cover image for the book {{ $book->$title }}'>
                 </div>
             @endforeach
         @endif
